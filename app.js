@@ -130,7 +130,12 @@ document.getElementById('subscribeForm').addEventListener('submit', async (e) =>
     const submitButton = e.target.querySelector('button');
     const buttonText = submitButton.querySelector('.button-text');
     const successMessage = document.querySelector('.success-message');
+    const errorMessage = document.querySelector('.error-message');
     const email = emailInput.value;
+    
+    // Hide any existing messages
+    successMessage.classList.remove('show');
+    errorMessage.classList.remove('show');
     
     try {
         submitButton.disabled = true;
@@ -149,28 +154,45 @@ document.getElementById('subscribeForm').addEventListener('submit', async (e) =>
         });
         
         const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.message || 'Failed to subscribe');
-        }
-        
         emailInput.value = '';
-        successMessage.classList.add('show');
         
-        // Hide success message after 5 seconds with fade out
-        setTimeout(() => {
-            successMessage.style.transition = 'all 0.5s ease-out';
-            successMessage.style.opacity = '0';
-            successMessage.style.transform = 'translateX(-50%) translateY(20px)';
+        if (response.status === 400 && data.message === 'Email already subscribed') {
+            errorMessage.classList.add('show');
             
-            // Remove show class and reset styles after animation
+            // Hide error message after 5 seconds with fade out
             setTimeout(() => {
-                successMessage.classList.remove('show');
-                successMessage.style.transition = '';
-                successMessage.style.opacity = '';
-                successMessage.style.transform = '';
-            }, 500);
-        }, 5000);
+                errorMessage.style.transition = 'all 0.5s ease-out';
+                errorMessage.style.opacity = '0';
+                errorMessage.style.transform = 'translateX(-50%) translateY(20px)';
+                
+                // Remove show class and reset styles after animation
+                setTimeout(() => {
+                    errorMessage.classList.remove('show');
+                    errorMessage.style.transition = '';
+                    errorMessage.style.opacity = '';
+                    errorMessage.style.transform = '';
+                }, 500);
+            }, 5000);
+        } else if (!response.ok) {
+            throw new Error(data.message || 'Failed to subscribe');
+        } else {
+            successMessage.classList.add('show');
+            
+            // Hide success message after 5 seconds with fade out
+            setTimeout(() => {
+                successMessage.style.transition = 'all 0.5s ease-out';
+                successMessage.style.opacity = '0';
+                successMessage.style.transform = 'translateX(-50%) translateY(20px)';
+                
+                // Remove show class and reset styles after animation
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                    successMessage.style.transition = '';
+                    successMessage.style.opacity = '';
+                    successMessage.style.transform = '';
+                }, 500);
+            }, 5000);
+        }
     } catch (error) {
         console.error('Subscription error:', error);
         alert(error.message || 'Failed to subscribe. Please try again.');
