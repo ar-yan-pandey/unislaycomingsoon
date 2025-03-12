@@ -38,10 +38,21 @@ transporter.verify()
         console.error('Email configuration error:', error);
     });
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('MongoDB connection error:', err));
+// Connect to MongoDB with improved error handling
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => {
+    console.error('MongoDB connection error:', err.message);
+    if (err.message.includes('invalid username')) {
+        console.error('Authentication failed - please check username and password');
+    }
+    if (err.message.includes('@') && err.message.includes('mongodb+srv')) {
+        console.error('Connection string may contain unescaped special characters');
+    }
+});
 
 // Create subscriber schema
 const subscriberSchema = new mongoose.Schema({

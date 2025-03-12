@@ -4,13 +4,18 @@ import nodemailer from 'nodemailer';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { connectToDatabase, Subscriber } from './db.js';
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Enable CORS
-app.use(cors());
+// Enable CORS with specific origin
+app.use(cors({
+    origin: ['http://localhost:3000', 'https://unislaycomingsoon.vercel.app'],
+    methods: ['POST'],
+    credentials: true
+}));
 
 // Parse JSON bodies
 app.use(express.json());
@@ -24,6 +29,11 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+// Verify email configuration
+transporter.verify()
+    .then(() => console.log('Email server is ready'))
+    .catch(err => console.error('Email configuration error:', err));
+
 // API endpoint for email subscription
 app.post('/api/subscribe', async (req, res) => {
     try {
@@ -32,6 +42,20 @@ app.post('/api/subscribe', async (req, res) => {
         if (!email) {
             return res.status(400).json({ error: 'Email is required' });
         }
+
+        // Connect to database
+        await connectToDatabase();
+
+        // Check if email already exists
+        const existingSubscriber = await Subscriber.findOne({ email });
+        if (existingSubscriber) {
+            return res.status(400).json({ error: 'Email already subscribed' });
+        }
+
+        // Create new subscriber
+        const subscriber = new Subscriber({ email });
+        await subscriber.save();
+        console.log('Subscriber saved to database:', email);
 
         // Read email template
         const emailTemplatePath = path.join(__dirname, '..', 'email.html');
@@ -70,7 +94,11 @@ app.post('/api/subscribe', async (req, res) => {
         res.status(200).json({ success: true, message: 'Subscription successful' });
     } catch (error) {
         console.error('Subscription error:', error);
-        res.status(500).json({ error: 'Server error', details: error.message });
+        if (error.code === 11000) {
+            res.status(400).json({ error: 'Email already subscribed' });
+        } else {
+            res.status(500).json({ error: 'Server error', details: error.message });
+        }
     }
 });
 
