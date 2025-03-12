@@ -11,7 +11,7 @@ const app = express();
 
 // Enable CORS with specific origin
 app.use(cors({
-    origin: ['http://localhost:3000', 'https://unislaycomingsoon.vercel.app'],
+    origin: ['http://localhost:3000', 'https://unislay.com'],
     methods: ['POST'],
     credentials: true
 }));
