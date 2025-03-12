@@ -134,7 +134,7 @@ document.getElementById('subscribeForm').addEventListener('submit', async (e) =>
     
     try {
         submitButton.disabled = true;
-        buttonText.textContent = 'Subscribing...';
+        buttonText.textContent = 'Joining...';
         
         const apiUrl = window.location.hostname === 'localhost' 
             ? 'http://localhost:3000/api/subscribe'
@@ -156,14 +156,26 @@ document.getElementById('subscribeForm').addEventListener('submit', async (e) =>
         
         emailInput.value = '';
         successMessage.classList.add('show');
+        
+        // Hide success message after 5 seconds with fade out
         setTimeout(() => {
-            successMessage.classList.remove('show');
-        }, 3000);
+            successMessage.style.transition = 'all 0.5s ease-out';
+            successMessage.style.opacity = '0';
+            successMessage.style.transform = 'translateX(-50%) translateY(20px)';
+            
+            // Remove show class and reset styles after animation
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+                successMessage.style.transition = '';
+                successMessage.style.opacity = '';
+                successMessage.style.transform = '';
+            }, 500);
+        }, 5000);
     } catch (error) {
         console.error('Subscription error:', error);
         alert(error.message || 'Failed to subscribe. Please try again.');
     } finally {
         submitButton.disabled = false;
-        buttonText.textContent = 'Subscribe';
+        buttonText.textContent = 'JOIN';
     }
 });
