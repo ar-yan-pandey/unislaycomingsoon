@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
@@ -7,8 +8,6 @@ import { fileURLToPath } from 'url';
 import { connectToDatabase, Subscriber } from './db.js';
 
 const app = express();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Enable CORS with specific origin
 app.use(cors({
@@ -58,7 +57,7 @@ app.post('/api/subscribe', async (req, res) => {
         console.log('Subscriber saved to database:', email);
 
         // Read email template
-        const emailTemplatePath = path.join(__dirname, '..', 'email.html');
+        const emailTemplatePath = path.join(process.cwd(), 'email.html');
         console.log('Reading email template from:', emailTemplatePath);
         
         let emailTemplate;
@@ -67,7 +66,8 @@ app.post('/api/subscribe', async (req, res) => {
             console.log('Email template loaded successfully');
         } catch (err) {
             console.error('Error reading email template:', err);
-            throw new Error('Failed to read email template');
+            // Don't throw error if template fails, just skip sending email
+            return res.status(200).json({ success: true, message: 'Subscription successful (without email)' });
         }
         
         // Customize email template
@@ -83,14 +83,20 @@ app.post('/api/subscribe', async (req, res) => {
         console.log('Sending email to:', email);
         
         // Send welcome email
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: 'Welcome to Unislay! Your College Journey Begins',
-            html: customizedTemplate
-        });
+        try {
+            await transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: 'Welcome to Unislay! Your College Journey Begins',
+                html: customizedTemplate
+            });
+            console.log('Email sent successfully');
+        } catch (emailError) {
+            console.error('Failed to send email:', emailError);
+            // Return success even if email fails, since subscription worked
+            return res.status(200).json({ success: true, message: 'Subscription successful (email failed)' });
+        }
         
-        console.log('Email sent successfully');
         res.status(200).json({ success: true, message: 'Subscription successful' });
     } catch (error) {
         console.error('Subscription error:', error);
@@ -107,4 +113,5 @@ app.use((req, res) => {
     res.status(404).json({ error: 'Not found' });
 });
 
+// Export the Express app
 export default app;

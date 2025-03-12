@@ -15,7 +15,7 @@ const port = process.env.PORT || 3000;
 
 // Configure CORS
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:52811'],
+    origin: ['http://localhost:3000', 'http://127.0.0.1:52811', 'https://unislaycomingsoon.vercel.app'],
     methods: ['GET', 'POST'],
     credentials: true
 }));
@@ -88,7 +88,7 @@ app.post('/api/subscribe', async (req, res) => {
         await subscriber.save();
 
         // Read email template
-        const emailTemplatePath = path.join(__dirname, 'email.html');
+        const emailTemplatePath = path.join(process.cwd(), 'email.html');
         console.log('Reading email template from:', emailTemplatePath);
         
         let emailTemplate;
