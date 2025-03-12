@@ -20,12 +20,14 @@ app.use(cors({
     credentials: true
 }));
 
-// Configure nodemailer
+// Configure nodemailer with Amazon SES
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: "email-smtp.ap-south-1.amazonaws.com", // Mumbai region
+    port: 587,
+    secure: false,
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
+        user: process.env.AWS_SES_USER,
+        pass: process.env.AWS_SES_PASSWORD
     }
 });
 
@@ -84,6 +86,12 @@ app.post('/api/subscribe', async (req, res) => {
             return res.status(400).json({ message: 'Email is required' });
         }
         
+        // Check if email already exists
+        const existingSubscriber = await Subscriber.findOne({ email });
+        if (existingSubscriber) {
+            return res.status(400).json({ message: 'Email already subscribed' });
+        }
+
         const subscriber = new Subscriber({ email });
         await subscriber.save();
 
@@ -114,7 +122,7 @@ app.post('/api/subscribe', async (req, res) => {
         try {
             console.log('Attempting to send email to:', email);
             await transporter.sendMail({
-                from: process.env.EMAIL_USER,
+                from: process.env.FROM_EMAIL,
                 to: email,
                 subject: 'Welcome to Unislay! Your College Journey Begins',
                 html: customizedTemplate
