@@ -480,22 +480,77 @@ button:active {
 }
 
 .success-message {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 1rem;
-    background: #000;
-    color: #FF4500;
-    font-weight: bold;
-    transform: translateY(-100%);
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    background: rgba(0, 0, 0, 0.95);
+    color: #fff;
+    padding: 20px;
+    border: 2px solid #FF4500;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
     opacity: 0;
     transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 4px 15px rgba(255, 69, 0, 0.2);
+    max-width: 90%;
+    width: auto;
+    z-index: 1000;
 }
 
 .success-message.show {
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
     opacity: 1;
+}
+
+.success-icon {
+    width: 24px;
+    height: 24px;
+    color: #FF4500;
+    flex-shrink: 0;
+}
+
+.success-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.success-content h3 {
+    margin: 0;
+    color: #FF4500;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.success-content p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* Mobile styles for success message */
+@media (max-width: 800px) {
+    .success-message {
+        bottom: 20px;
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .success-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .success-content h3 {
+        font-size: 14px;
+    }
+
+    .success-content p {
+        font-size: 12px;
+    }
 }
 
 .controls {
