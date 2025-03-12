@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.js",
+      "src": "server.js",
       "use": "@vercel/node"
     },
     {
@@ -12,8 +12,12 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "api/index.js"
+      "src": "/api/subscribe",
+      "dest": "server.js"
+    },
+    {
+      "src": "/subscribe",
+      "dest": "server.js"
     },
     {
       "src": "^/(.+\\.mp4)$",
@@ -22,6 +26,12 @@
         "Cache-Control": "public, max-age=31536000, immutable"
       },
       "dest": "/$1"
+    },
+    {
+      "src": "/_vercel/insights/script.js",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
     },
     {
       "handle": "filesystem"
