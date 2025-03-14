@@ -121,7 +121,7 @@ body {
     .brutalist-input {
         padding: 10px;
         font-size: 14px;
-        box-shadow: 3px 3px 0 #000, 6px 6px 0 #FF4500;
+        box-shadow: 3px 3px 0 #000, 6px 6px 0 #A883D4;
         border-width: 3px;
         height: 42px;
         border-right-width: 2px;
@@ -258,8 +258,8 @@ body {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 25vh;
-    background: linear-gradient(to top, rgba(255, 69, 0, 0.6), transparent);
+    height: 30vh;
+    background: linear-gradient(to top, rgba(168, 131, 212, 0.6), transparent);
     z-index: 1;
 }
 
@@ -296,7 +296,7 @@ form {
 }
 
 form button {
-    background: #FF4500;
+    background: #A883D4;
     border: 4px solid #000;
     color: #000;
     padding: 15px 30px;
@@ -346,7 +346,7 @@ form button:active {
     border-radius: 0;
     outline: none;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    box-shadow: 5px 5px 0 #000, 10px 10px 0 #FF4500;
+    box-shadow: 5px 5px 0 #000, 10px 10px 0 #A883D4;
 }
 
 @keyframes glitch {
@@ -416,7 +416,7 @@ form button:active {
 
 .brutalist-input:focus + .brutalist-label {
     transform: rotate(0deg) scale(1.05);
-    background-color: #FF4500;
+    background-color: #A883D4;
 }
 
 .smooth-type::before {
@@ -453,13 +453,13 @@ form button:active {
 
 @keyframes focus-pulse {
     0%, 100% { border-color: #000; }
-    50% { border-color: #FF4500; }
+    50% { border-color: #A883D4; }
 }
 
 button {
     padding: 15px 30px;
     border: 4px solid #000;
-    background-color: #FF4500;
+    background-color: #A883D4;
     color: white;
     font-size: 18px;
     font-weight: bold;
@@ -487,7 +487,7 @@ button:active {
     background: rgba(0, 0, 0, 0.95);
     color: #fff;
     padding: 20px;
-    border: 2px solid #FF4500;
+    border: 2px solid #A883D4;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -508,7 +508,7 @@ button:active {
 .success-icon {
     width: 24px;
     height: 24px;
-    color: #FF4500;
+    color: #A883D4;
     flex-shrink: 0;
 }
 
@@ -520,7 +520,7 @@ button:active {
 
 .success-content h3 {
     margin: 0;
-    color: #FF4500;
+    color: #A883D4;
     font-size: 16px;
     font-weight: bold;
 }
@@ -539,7 +539,7 @@ button:active {
     background: rgba(0, 0, 0, 0.95);
     color: #fff;
     padding: 20px;
-    border: 2px solid #FF4500;
+    border: 2px solid #A883D4;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -573,7 +573,7 @@ button:active {
 
 .error-content h3 {
     margin: 0;
-    color: #FF4500;
+    color: #A883D4;
     font-size: 16px;
     font-weight: bold;
 }
